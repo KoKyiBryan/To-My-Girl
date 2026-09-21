@@ -1,0 +1,378 @@
+# To-My-Girl<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Question For You 💌</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #ffd6e7, #fff1f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.card {
+    width: 90%;
+    max-width: 420px;
+    background: rgba(255,255,255,0.92);
+    border-radius: 28px;
+    padding: 32px 25px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(150,70,100,.18);
+    animation: appear .7s ease;
+}
+
+.heart {
+    font-size: 55px;
+    animation: beat 1.2s infinite;
+}
+
+h1 {
+    color: #d94f82;
+    margin: 12px 0;
+}
+
+p {
+    color: #666;
+    line-height: 1.6;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    padding: 15px;
+    margin-top: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.option {
+    background: #fff0f5;
+    color: #c43f70;
+}
+
+.option:hover {
+    transform: scale(1.03);
+    background: #ffdce9;
+}
+
+.next {
+    background: #d94f82;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.question-number {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.final {
+    font-size: 17px;
+    color: #555;
+}
+
+.heart-float {
+    position: fixed;
+    bottom: -30px;
+    animation: float 5s linear forwards;
+    opacity: .7;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes beat {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes float {
+    from {
+        transform: translateY(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: .8;
+    }
+    to {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <!-- START -->
+    <div id="start">
+        <div class="heart">💌</div>
+
+        <h1>A Little Question For You...</h1>
+
+        <p>
+            Don't overthink it 👀<br>
+            Just answer honestly.
+        </p>
+
+        <button class="next" onclick="startQuiz()">
+            Open 💗
+        </button>
+    </div>
+
+
+    <!-- QUIZ -->
+    <div id="quiz" class="hidden">
+
+        <div class="question-number" id="number"></div>
+
+        <h1 id="question"></h1>
+
+        <div id="answers"></div>
+
+    </div>
+
+
+    <!-- FINAL -->
+    <div id="final" class="hidden">
+
+        <div class="heart">❤️</div>
+
+        <h1>Thank You</h1>
+
+        <p class="final">
+            I actually made this because you're
+            a little more special to me than
+            I usually say.
+        </p>
+
+        <p>
+            Maybe someday I'll tell you properly. 🤍
+        </p>
+
+        <button class="next" onclick="showLove()">
+            One More Thing...
+        </button>
+
+    </div>
+
+
+    <!-- LOVE -->
+    <div id="love" class="hidden">
+
+        <div class="heart">🥹❤️</div>
+
+        <h1>Here's the truth...</h1>
+
+        <p class="final">
+            I like you.
+        </p>
+
+        <p>
+            No pressure.<br>
+            I just wanted you to know.
+        </p>
+
+        <p>
+            — Someone who thinks you're special 🤍
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const questions = [
+
+{
+    q: "What was your first impression of me?",
+    a: [
+        "Cute 👀",
+        "Funny 😂",
+        "Quiet 😌",
+        "A little weird 🤣"
+    ]
+},
+
+{
+    q: "Do you enjoy talking to me?",
+    a: [
+        "Yes ❤️",
+        "Sometimes 👀",
+        "Definitely",
+        "I'm not telling you 😏"
+    ]
+},
+
+{
+    q: "Would you hang out with me again?",
+    a: [
+        "Of course ❤️",
+        "Maybe 👀",
+        "Definitely",
+        "You have to ask first 😌"
+    ]
+},
+
+{
+    q: "Do you think two people can slowly fall for each other?",
+    a: [
+        "Yes ❤️",
+        "Maybe",
+        "I believe they can",
+        "That's complicated 😅"
+    ]
+},
+
+{
+    q: "Do you think I'm someone special to you?",
+    a: [
+        "Yes ❤️",
+        "A little",
+        "Maybe 👀",
+        "I'll never tell"
+    ]
+},
+
+{
+    q: "Last question...",
+    a: [
+        "I'm ready 👀",
+        "Okay...",
+        "Why are you asking this? 😂",
+        "Tell me already!"
+    ]
+}
+
+];
+
+let current = 0;
+let answers = [];
+
+function startQuiz() {
+
+    document.getElementById("start").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+
+    showQuestion();
+
+}
+
+function showQuestion() {
+
+    const q = questions[current];
+
+    document.getElementById("number").innerText =
+        `Question ${current + 1} of ${questions.length}`;
+
+    document.getElementById("question").innerText = q.q;
+
+    const answersBox = document.getElementById("answers");
+
+    answersBox.innerHTML = "";
+
+    q.a.forEach(answer => {
+
+        const button = document.createElement("button");
+
+        button.className = "option";
+        button.innerText = answer;
+
+        button.onclick = () => chooseAnswer(answer);
+
+        answersBox.appendChild(button);
+
+    });
+
+}
+
+function chooseAnswer(answer) {
+
+    answers.push({
+        question: questions[current].q,
+        answer: answer
+    });
+
+    if (current < questions.length - 1) {
+
+        current++;
+        showQuestion();
+
+    } else {
+
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("final").classList.remove("hidden");
+
+        localStorage.setItem(
+            "crushAnswers",
+            JSON.stringify(answers)
+        );
+
+        createHearts();
+
+    }
+
+}
+
+function showLove() {
+
+    document.getElementById("final").classList.add("hidden");
+    document.getElementById("love").classList.remove("hidden");
+
+    createHearts();
+
+}
+
+function createHearts() {
+
+    for(let i = 0; i < 15; i++) {
+
+        const heart = document.createElement("div");
+
+        heart.className = "heart-float";
+        heart.innerText = ["❤️","💗","💕","💖","✨"][Math.floor(Math.random()*5)];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration =
+            (3 + Math.random() * 3) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 6000);
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
